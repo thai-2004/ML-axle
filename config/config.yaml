@@ -1,0 +1,77 @@
+# Configuration file for Online Shoppers Intention Prediction Project
+
+# Data paths
+data:
+  raw: "data/raw/online_shoppers_intention.csv"
+  processed_dir: "data/processed"
+  features_dir: "data/features"
+
+# Model paths
+models:
+  decision_tree: "models/decision_tree.pkl"
+  random_forest: "models/random_forest.pkl"
+  preprocessor: "models/preprocessor.pkl"
+
+# Results paths
+results:
+  figures_dir: "results/figures"
+  reports_dir: "results/reports"
+  metrics_dir: "results/metrics"
+
+# Data splitting
+train_test_split:
+  test_size: 0.2
+  val_size: 0.1
+  random_state: 42
+  stratify: true
+
+# Feature engineering
+features:
+  create_totals: true
+  create_ratios: true
+  create_duration_per_page: true
+  create_seasonal: true
+  create_interactions: true
+
+# Model parameters - Decision Tree
+decision_tree:
+  max_depth: null # None for unlimited
+  min_samples_split: 2
+  min_samples_leaf: 1
+  class_weight: "balanced"
+  random_state: 42
+
+# Model parameters - Random Forest
+random_forest:
+  n_estimators: 100
+  max_depth: null # None for unlimited
+  max_features: "sqrt"
+  min_samples_split: 2
+  min_samples_leaf: 1
+  class_weight: "balanced"
+  random_state: 42
+  n_jobs: -1
+
+# Hyperparameter tuning
+hyperparameter_tuning:
+  enabled: false
+  cv_folds: 5
+  scoring: "f1"
+
+# Evaluation metrics
+evaluation:
+  target_class: "Revenue"
+  positive_class: true
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "roc_auc"
+    - "pr_auc"
+
+# Visualization settings
+visualization:
+  figure_dpi: 300
+  style: "seaborn-v0_8"
+  save_figures: true
