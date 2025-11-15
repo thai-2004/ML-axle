@@ -336,6 +336,68 @@ Gini Gain(BounceRates, threshold=0.01) = 0.32 - 0.264 = 0.056
 
 - 2,000 + 70 = **~2,070 lần tính Gini Gain** cho 1 split!
 
+#### 5.1.1. Giải Thích Chi Tiết: "~20 numerical features × ~100 threshold ≈ 2,000 cách split"
+
+##### 1. **~20 numerical features**
+
+Theo file này:
+- **34 features** sau feature engineering
+- **~14 categorical features** (như `Month`, `VisitorType`, `Weekend`, `is_q4`, `quarter`, ...)
+- **~20 numerical features** = 34 - 14 (ví dụ: `PageValues`, `BounceRates`, `total_duration`, `admin_duration_ratio`, ...)
+
+##### 2. **~100 threshold cho mỗi numerical feature**
+
+Cách tính threshold:
+- Với numerical feature, Decision Tree tạo threshold candidates tại điểm giữa các giá trị liên tiếp
+- Ví dụ với `BounceRates`: `[0.0, 0.02, 0.05, 0.2, 0.2]` → thresholds: `[0.01, 0.035, 0.125]` = **3 threshold candidates**
+
+**Tại sao ~100 threshold?**
+- Nếu một feature có khoảng 200 unique values → có thể tạo ~200 threshold candidates
+- Nếu có 50 unique values → ~50 threshold candidates
+- **Trung bình**: nếu mỗi numerical feature có khoảng 100 unique values → **~100 threshold candidates**
+- Scikit-learn có thể giới hạn số threshold (ví dụ tối đa 256) để tối ưu tốc độ
+
+##### 3. **20 × 100 = 2,000 cách split**
+
+Logic:
+- Với mỗi numerical feature, thử mỗi threshold → mỗi threshold = **1 cách split**
+- 20 features × 100 threshold/feature = **2,000 cách split cần thử**
+
+**Ví dụ minh họa:**
+```
+Feature: PageValues
+- Threshold 1: PageValues <= 5.0 → Split #1
+- Threshold 2: PageValues <= 10.0 → Split #2
+- Threshold 3: PageValues <= 15.0 → Split #3
+...
+- Threshold 100: PageValues <= 500.0 → Split #100
+→ Tổng: 100 cách split cho PageValues
+
+Làm tương tự cho 20 numerical features → 20 × 100 = 2,000 cách split
+```
+
+##### 4. **Đây chỉ là ước tính**
+
+Trong thực tế:
+- Feature có ít unique values → ít threshold hơn
+- Feature có nhiều unique values → nhiều threshold hơn
+- Scikit-learn có thể giới hạn số threshold để tối ưu
+
+**~100 threshold/feature** là ước tính trung bình dựa trên:
+- Dataset có 12,330 mẫu
+- Các numerical features có phân bố đa dạng
+- Có thể áp dụng giới hạn tối đa (ví dụ 256 thresholds)
+
+##### Tóm tắt
+
+| Thành phần | Giải thích |
+|------------|------------|
+| **20 numerical features** | 34 tổng features - 14 categorical ≈ 20 numerical |
+| **~100 threshold/feature** | Ước tính trung bình (dựa trên số unique values) |
+| **2,000 cách split** | 20 × 100 = 2,000 cách split cần thử và tính Gini Gain |
+
+Con số này thể hiện độ phức tạp: để chọn best split tại 1 node, Decision Tree cần thử và tính Gini Gain cho khoảng **2,000 cách split khác nhau**.
+
 ---
 
 ### 5.2. Pseudo-code Đầy Đủ
