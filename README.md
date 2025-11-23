@@ -59,6 +59,12 @@ source venv/bin/activate  # Trên Windows: venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
+## 🖥️ Giao diện kiểm tra model
+
+- Chạy `streamlit run app/streamlit_app.py` từ thư mục gốc để mở giao diện nhập liệu.
+- Giao diện tải bộ dữ liệu gốc để lấy các giá trị trung vị làm mặc định và giữ đúng thứ tự cột mà các mô hình được huấn luyện.
+- Chọn giữa `Decision Tree` và `Random Forest` trong sidebar, điều chỉnh các chỉ số phiên (số lượt truy cập, thời lượng, bounce/exit, v.v.) rồi nhấn **Run prediction** để xem xác suất mua hàng và nhãn đoán của model.
+- Mở rộng các phần "Encoded row" và "Dataset snapshot" để xem dữ liệu đã mã hóa được gửi cho model và các dòng đầu tiên của tập huấn luyện.
 
 ## 📊 Dữ liệu
 
@@ -110,3 +116,4 @@ Dự án cuối kỳ - Machine Learning
 ## 📄 License
 
 MIT License
+
